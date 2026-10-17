@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RateCut — Every Rupee Counts</title>
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green-dark: #1b5e20;
+  --green: #2e7d32;
+  --green-light: #4caf50;
+  --green-pale: #e8f5e9;
+  --green-bg: #f1f8e9;
+  --white: #ffffff;
+  --gray-50: #fafafa;
+  --gray-100: #f5f5f5;
+  --gray-200: #eeeeee;
+  --gray-300: #e0e0e0;
+  --gray-600: #757575;
+  --gray-800: #424242;
+  --text: #212121;
+  --red: #c62828;
+  --red-light: #ffebee;
+  --orange: #e65100;
+  --orange-light: #fff3e0;
+  --blue: #1565c0;
+  --blue-light: #e3f2fd;
+  --shadow: 0 2px 8px rgba(0,0,0,0.10);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.12);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --transition: 0.25s ease;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--green-bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ===== TYPOGRAPHY ===== */
+h1 { font-size: 2rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.2rem; }
+
+/* ===== LAYOUT ===== */
+.container { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+
+/* ===== HEADER ===== */
+header {
+  background: linear-gradient(135deg, var(--green-dark), var(--green));
+  color: var(--white);
+  padding: 20px 0;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-lg);
+}
+header h1 { font-size: 1.6rem; letter-spacing: 0.5px; }
+header p { opacity: 0.9; font-size: 0.95rem; margin-top: 4px; }
+
+/* ===== NAV BAR ===== */
+.nav-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  padding: 12px 0;
+  background: var(--white);
+  border-bottom: 2px solid var(--green-pale);
+  position: sticky;
+  top: 68px;
+  z-index: 99;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+}
+.nav-btn {
+  background: var(--green-pale);
+  color: var(--green-dark);
+  border: 2px solid transparent;
+  padding: 8px 16px;
+  border-radius: 24px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.nav-btn:hover, .nav-btn:focus { background: var(--green-light); color: var(--white); outline: none; }
+.nav-btn.active { background: var(--green); color: var(--white); border-color: var(--green-dark); }
+
+/* ===== SECTIONS ===== */
+.section {
+  display: none;
+  animation: fadeIn 0.3s ease;
+  padding: 24px 0 40px;
+}
+.section.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card h2 { color: var(--green-dark); margin-bottom: 12px; }
+.card h3 { color: var(--green); margin-bottom: 8px; }
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn:focus { outline: 3px solid var(--green-light); outline-offset: 2px; }
+.btn-primary { background: var(--green); color: var(--white); }
+.btn-primary:hover { background: var(--green-dark); }
+.btn-secondary { background: var(--gray-200); color: var(--text); }
+.btn-secondary:hover { background: var(--gray-300); }
+.btn-danger { background: var(--red); color: var(--white); }
+.btn-danger:hover { background: #b71c1c; }
+.btn-sm { padding: 6px 14px; font-size: 0.85rem; }
+.btn-block { display: flex; justify-content: center; width: 100%; }
+
+/* ===== FORMS ===== */
+label { display: block; font-weight: 600; margin-bottom: 4px; color: var(--gray-800); }
+input, select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  transition: var(--transition);
+  background: var(--white);
+}
+input:focus, select:focus { border-color: var(--green-light); outline: none; box-shadow: 0 0 0 3px rgba(76,175,80,0.18); }
+.form-group { margin-bottom: 16px; }
+.form-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.form-row .form-group { flex: 1; min-width: 140px; }
+
+/* ===== ALERTS ===== */
+.alert {
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.alert-info { background: var(--blue-light); color: var(--blue); border: 1px solid #bbdefb; }
+.alert-warning { background: var(--orange-light); color: var(--orange); border: 1px solid #ffe0b2; }
+.alert-danger { background: var(--red-light); color: var(--red); border: 1px solid #ffcdd2; }
+.alert-success { background: var(--green-pale); color: var(--green-dark); border: 1px solid #c8e6c9; }
+
+/* ===== DEMO BADGE ===== */
+.demo-badge {
+  display: inline-block;
+  background: var(--orange-light);
+  color: var(--orange);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border: 1px solid #ffcc80;
+}
+
+/* ===== TABLES ===== */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--gray-200); }
+th { background: var(--green-pale); color: var(--green-dark); font-weight: 700; position: sticky; top: 0; }
+tr:hover { background: var(--gray-50); }
+.price-cell { font-weight: 700; color: var(--green-dark); }
+.cheapest { background: #c8e6c9 !important; }
+
+/* ===== SHOPPING LIST ===== */
+.shop-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--gray-50);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  border-left: 4px solid var(--green);
+}
+.shop-item.flexible { border-left-color: var(--gray-300); }
+.shop-item .item-name { font-weight: 600; min-width: 100px; flex: 1; }
+.shop-item .item-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.qty-btn {
+  width: 32px; height: 32px;
+  border: 2px solid var(--gray-300);
+  background: var(--white);
+  border-radius: 50%;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+.qty-btn:hover { border-color: var(--green); color: var(--green); }
+.qty-display { font-weight: 700; min-width: 24px; text-align: center; }
+.badge-essential {
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: var(--transition);
+}
+.badge-essential.essential { background: var(--green); color: var(--white); }
+.badge-essential.flexible { background: var(--gray-200); color: var(--gray-600); }
+.remove-btn {
+  background: none;
+  border: none;
+  color: var(--red);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: var(--transition);
+}
+.remove-btn:hover { background: var(--red-light); }
+
+/* ===== BUDGET SUMMARY ===== */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.summary-card {
+  background: var(--green-pale);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  text-align: center;
+}
+.summary-card.danger { background: var(--red-light); }
+.summary-card .label { font-size: 0.85rem; color: var(--gray-600); margin-bottom: 4px; }
+.summary-card .value { font-size: 1.5rem; font-weight: 800; color: var(--green-dark); }
+.summary-card.danger .value { color: var(--red); }
+
+/* ===== COMPARISON TABLE HIGHLIGHT ===== */
+.shop-total { font-weight: 800; font-size: 1.05rem; }
+.shop-cheapest { color: var(--green-dark); }
+.shop-expensive { color: var(--red); }
+
+/* ===== SAVINGS ===== */
+.savings-box {
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  color: var(--white);
+  border-radius: var(--radius);
+  padding: 32px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+.savings-box .amount { font-size: 2.5rem; font-weight: 800; }
+.savings-box .sub { opacity: 0.9; margin-top: 4px; }
+
+/* ===== HOW IT WORKS ===== */
+.steps { display: flex; flex-direction: column; gap: 20px; }
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.step-number {
+  width: 48px;
+  height: 48px;
+  background: var(--green);
+  color: var(--white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.step-content h3 { margin-bottom: 4px; }
+
+/* ===== FOOTER ===== */
+footer {
+  text-align: center;
+  padding: 24px 16px;
+  background: var(--green-dark);
+  color: rgba(255,255,255,0.8);
+  font-size: 0.85rem;
+  margin-top: 40px;
+}
+
+/* ===== TOAST ===== */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.toast {
+  background: var(--green-dark);
+  color: var(--white);
+  padding: 14px 20px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  animation: slideIn 0.3s ease;
+  max-width: 320px;
+  font-size: 0.9rem;
+}
+.toast.error { background: var(--red); }
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+/* ===== HERO HOME ===== */
+.hero {
+  text-align: center;
+  padding: 40px 20px;
+  background: linear-gradient(180deg, var(--green-pale) 0%, var(--white) 100%);
+  border-radius: var(--radius);
+  margin-bottom: 24px;
+}
+.hero h2 { color: var(--green-dark); font-size: 1.8rem; margin-bottom: 12px; }
+.hero p { color: var(--gray-600); font-size: 1.1rem; max-width: 500px; margin: 0 auto 24px; }
+.hero-buttons { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+.feature-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  cursor: pointer;
+}
+.feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.feature-icon { font-size: 2.2rem; margin-bottom: 12px; }
+.feature-card h3 { color: var(--green-dark); margin-bottom: 6px; }
+.feature-card p { color: var(--gray-600); font-size: 0.9rem; }
+
+/* ===== PRODUCT ADD AREA ===== */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.product-chip {
+  background: var(--green-pale);
+  border: 2px solid var(--green-light);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.product-chip:hover { background: var(--green-light); color: var(--white); }
+.product-chip.added { background: var(--gray-200); border-color: var(--gray-300); color: var(--gray-600); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  header h1 { font-size: 1.2rem; }
+  .nav-bar { gap: 6px; padding: 8px; top: 56px; }
+  .nav-btn { padding: 6px 10px; font-size: 0.8rem; }
+  h2 { font-size: 1.25rem; }
+  .card { padding: 16px; }
+  .hero { padding: 24px 16px; }
+  .hero h2 { font-size: 1.4rem; }
+  .summary-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .summary-card .value { font-size: 1.2rem; }
+  .savings-box .amount { font-size: 1.8rem; }
+  .shop-item { padding: 10px 12px; }
+  .toast-container { bottom: 12px; right: 12px; left: 12px; }
+  .toast { max-width: 100%; }
+}
+
+/* ===== SKIP LINK ===== */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  background: var(--green-dark);
+  color: var(--white);
+  padding: 8px 16px;
+  z-index: 200;
+  font-size: 1rem;
+}
+.skip-link:focus { top: 0; }
+
+/* Utility */
+.text-center { text-align: center; }
+.mt-16 { margin-top: 16px; }
+.mb-12 { margin-bottom: 12px; }
+.gap-12 { gap: 12px; }
+.flex-wrap { display: flex; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <div class="container">
+    <h1 id="site-title">🪙 RateCut — Every Rupee Counts</h1>
+    <p id="site-subtitle">Plan your shopping, compare prices and save money.</p>
+  </div>
+</header>
+
+<!-- ===== NAV ===== -->
+<nav class="nav-bar" id="navbar" role="navigation" aria-label="Main navigation">
+  <button class="nav-btn active" data-section="home" id="nav-home">🏠 <span data-i18n="nav_home">Home</span></button>
+  <button class="nav-btn" data-section="budget" id="nav-budget">🛒 <span data-i18n="nav_budget">Start Shopping</span></button>
+  <button class="nav-btn" data-section="compare" id="nav-compare">📊 <span data-i18n="nav_compare">Compare Prices</span></button>
+  <button class="nav-btn" data-section="savings" id="nav-savings">💰 <span data-i18n="nav_savings">My Savings</span></button>
+  <button class="nav-btn" data-section="submit" id="nav-submit">📝 <span data-i18n="nav_submit">Submit Price</span></button>
+  <button class="nav-btn" data-section="howto" id="nav-howto">❓ <span data-i18n="nav_howto">How It Works</span></button>
+  <button class="nav-btn" onclick="toggleLanguage()" id="lang-btn">🌐 <span data-i18n="nav_lang">తెలుగు</span></button>
+</nav>
+
+<!-- ===== MAIN ===== -->
+<main id="main" class="container">
+
+<!-- =========== HOME =========== -->
+<section class="section active" id="sec-home">
+  <div class="hero">
+    <h2 data-i18n="home_title">Welcome to RateCut</h2>
+    <p data-i18n="home_desc">A simple tool to plan your shopping, compare prices across shops, and keep track of how much you save — all in Indian Rupees (₹).</p>
+    <div class="hero-buttons">
+      <button class="btn btn-primary" onclick="goTo('budget')">🛒 <span data-i18n="nav_budget">Start Shopping</span></button>
+      <button class="btn btn-primary" onclick="goTo('compare')">📊 <span data-i18n="nav_compare">Compare Prices</span></button>
+      <button class="btn btn-secondary" onclick="goTo('savings')">💰 <span data-i18n="nav_savings">My Savings</span></button>
+      <button class="btn btn-secondary" onclick="goTo('howto')">❓ <span data-i18n="nav_howto">How It Works</span></button>
+      <button class="btn btn-secondary" onclick="toggleLanguage()">🌐 <span data-i18n="btn_change_lang">Change Language</span></button>
+    </div>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card" onclick="goTo('budget')">
+      <div class="feature-icon">📋</div>
+      <h3 data-i18n="feat_budget_title">Plan Your Budget</h3>
+      <p data-i18n="feat_budget_desc">Set a budget and build your shopping list with quantities and priorities.</p>
+    </div>
+    <div class="feature-card" onclick="goTo('compare')">
+      <div class="feature-icon">🏪</div>
+      <h3 data-i18n="feat_compare_title">Compare Shop Prices</h3>
+      <p data-i18n="feat_compare_desc">See sample prices from 3 shops and find the best deal for your basket.</p>
+    </div>
+    <div class="feature-card" onclick="goTo('savings')">
+      <div class="feature-icon">🐖</div>
+      <h3 data-i18n="feat_savings_title">Track Your Savings</h3>
+      <p data-i18n="feat_savings_desc">See how much you could save by choosing the cheapest basket.</p>
+    </div>
+    <div class="feature-card" onclick="goTo('howto')">
+      <div class="feature-icon">💡</div>
+      <h3 data-i18n="feat_howto_title">Easy to Use</h3>
+      <p data-i18n="feat_howto_desc">Simple steps anyone can follow — no login needed.</p>
+    </div>
+  </div>
+</section>
+
+<!-- =========== SHOPPING BUDGET =========== -->
+<section class="section" id="sec-budget">
+  <div class="card">
+    <h2>🛒 <span data-i18n="budget_title">Shopping Budget & List</span></h2>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="budgetInput" data-i18n="budget_label">Your Budget (₹)</label>
+        <input type="number" id="budgetInput" min="1" placeholder="e.g. 1000" value="1000">
+      </div>
+      <div class="form-group">
+        <label for="householdSize" data-i18n="household_label">Household Size</label>
+        <select id="householdSize">
+          <option value="1">1 person</option>
+          <option value="2">2 people</option>
+          <option value="3" selected>3 people</option>
+          <option value="4">4 people</option>
+          <option value="5">5+ people</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label data-i18n="budget_quick">Quick budget options:</label>
+      <div class="flex-wrap gap-12">
+        <button class="btn btn-sm btn-secondary" onclick="document.getElementById('budgetInput').value=500;updateAssistant();">₹500</button>
+        <button class="btn btn-sm btn-secondary" onclick="document.getElementById('budgetInput').value=1000;updateAssistant();">₹1,000</button>
+        <button class="btn btn-sm btn-secondary" onclick="document.getElementById('budgetInput').value=2000;updateAssistant();">₹2,000</button>
+        <button class="btn btn-sm btn-secondary" onclick="document.getElementById('budgetInput').value=5000;updateAssistant();">₹5,000</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="add_products">➕ Add Products to Your List</h3>
+    <p class="mb-12" style="color:var(--gray-600);" data-i18n="add_products_hint">Tap a product to add it. Tap again to remove.</p>
+    <div class="product-grid" id="productGrid"></div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+      <h3 data-i18n="your_list">📝 Your Shopping List</h3>
+      <button class="btn btn-sm btn-danger" onclick="resetList()" data-i18n="btn_reset">🔄 Reset List</button>
+    </div>
+    <div id="shoppingList"></div>
+    <div id="emptyListMsg" class="alert alert-info" style="display:none;">
+      <span>ℹ️</span> <span data-i18n="empty_list">Your shopping list is empty. Add products above to get started.</span>
+    </div>
+  </div>
+
+  <!-- SMART BUDGET ASSISTANT -->
+  <div class="card" id="assistantCard" style="display:none;">
+    <h2>🧠 <span data-i18n="assistant_title">Smart Budget Assistant</span></h2>
+
+    <div class="summary-grid" id="summaryGrid"></div>
+
+    <div id="assistantAdvice"></div>
+
+    <div id="cheapestBasketSection" style="display:none;">
+      <h3 class="mt-16 mb-12" data-i18n="cheapest_basket">🏆 Cheapest Valid Basket</h3>
+      <div id="cheapestBasketInfo"></div>
+    </div>
+
+    <div id="alternativesSection" style="display:none;">
+      <h3 class="mt-16 mb-12" data-i18n="alternatives_title">💡 Suitable Cheaper Alternatives</h3>
+      <div id="alternativesList"></div>
+    </div>
+
+    <div class="mt-16 flex-wrap gap-12">
+      <button class="btn btn-primary" onclick="goTo('compare')">📊 <span data-i18n="nav_compare">Compare Prices</span></button>
+      <button class="btn btn-secondary" onclick="saveShoppingList()">💾 <span data-i18n="btn_save">Save List</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- =========== COMPARE PRICES =========== -->
+<section class="section" id="sec-compare">
+  <div class="card">
+    <h2>📊 <span data-i18n="compare_title">Compare Prices Across Shops</span></h2>
+    <div class="alert alert-warning">
+      <span>⚠️</span>
+      <span><strong>DEMO DATA — NOT LIVE MARKET PRICES.</strong> <span data-i18n="demo_warning">These are sample prices for demonstration only. Actual market prices will vary.</span></span>
+    </div>
+    <div class="demo-badge mb-12">DEMO DATA</div>
+
+    <div class="table-wrap">
+      <table id="compareTable">
+        <thead>
+          <tr>
+            <th data-i18n="th_product">Product</th>
+            <th data-i18n="th_qty">Qty</th>
+            <th>🏪 Shop A</th>
+            <th>🏪 Shop B</th>
+            <th>🏪 Shop C</th>
+            <th data-i18n="th_updated">Updated</th>
+          </tr>
+        </thead>
+        <tbody id="compareBody"></tbody>
+        <tfoot id="compareFoot"></tfoot>
+      </table>
+    </div>
+
+    <div id="compareVerdict" class="mt-16"></div>
+  </div>
+
+  <!-- Basket comparison for user's list -->
+  <div class="card" id="basketCompareCard" style="display:none;">
+    <h3>🧺 <span data-i18n="basket_compare">Your Basket Cost at Each Shop</span></h3>
+    <div class="alert alert-warning">
+      <span>⚠️</span>
+      <span><strong>DEMO DATA — NOT LIVE MARKET PRICES.</strong></span>
+    </div>
+    <div class="summary-grid" id="basketCompareGrid"></div>
+    <div id="basketCompareVerdict"></div>
+  </div>
+</section>
+
+<!-- =========== MY SAVINGS =========== -->
+<section class="section" id="sec-savings">
+  <div class="card">
+    <h2>💰 <span data-i18n="savings_title">My Savings Dashboard</span></h2>
+    <div id="savingsContent"></div>
+    <div id="noSavings" class="alert alert-info" style="display:none;">
+      <span>ℹ️</span> <span data-i18n="no_savings">No saved shopping list found. Go to "Start Shopping", build a list, and click "Save List" to see savings here.</span>
+    </div>
+    <div class="mt-16 flex-wrap gap-12">
+      <button class="btn btn-primary" onclick="goTo('budget')">🛒 <span data-i18n="nav_budget">Start Shopping</span></button>
+      <button class="btn btn-danger" onclick="clearSavedList()">🗑️ <span data-i18n="btn_clear_saved">Clear Saved List</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- =========== SUBMIT A PRICE =========== -->
+<section class="section" id="sec-submit">
+  <div class="card">
+    <h2>📝 <span data-i18n="submit_title">Submit a Local Price</span></h2>
+    <div class="alert alert-info">
+      <span>ℹ️</span>
+      <span data-i18n="submit_disclaimer">Submitted prices are <strong>unverified demo submissions</strong>. They are stored only in your browser for this session and are <strong>not shared</strong> with other users or permanently stored on any server.</span>
+    </div>
+
+    <form id="priceForm" onsubmit="submitPrice(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="pShop" data-i18n="submit_shop">Shop Name *</label>
+          <input type="text" id="pShop" required maxlength="50" placeholder="e.g. My Local Kirana">
+        </div>
+        <div class="form-group">
+          <label for="pProduct" data-i18n="submit_product">Product Name *</label>
+          <input type="text" id="pProduct" required maxlength="50" placeholder="e.g. Rice">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="pQty" data-i18n="submit_qty">Quantity *</label>
+          <input type="text" id="pQty" required maxlength="30" placeholder="e.g. 1 kg">
+        </div>
+        <div class="form-group">
+          <label for="pPrice" data-i18n="submit_price">Price (₹) *</label>
+          <input type="number" id="pPrice" required min="1" max="100000" placeholder="e.g. 45">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="pDate" data-i18n="submit_date">Date *</label>
+        <input type="date" id="pDate" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">📤 <span data-i18n="btn_submit_price">Submit Price</span></button>
+    </form>
+
+    <div id="submittedPrices" class="mt-16" style="display:none;">
+      <h3 data-i18n="submitted_heading">📋 Your Submitted Prices (Demo Only)</h3>
+      <div class="alert alert-warning" style="margin-top:8px;">
+        <span>⚠️</span>
+        <span data-i18n="submitted_warning">These submissions are stored locally in your browser only. They are not verified and not shared with anyone.</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th data-i18n="th_shop">Shop</th>
+              <th data-i18n="th_product">Product</th>
+              <th data-i18n="th_qty">Qty</th>
+              <th data-i18n="th_price">Price (₹)</th>
+              <th data-i18n="th_date">Date</th>
+            </tr>
+          </thead>
+          <tbody id="submittedBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========== HOW IT WORKS =========== -->
+<section class="section" id="sec-howto">
+  <div class="card">
+    <h2>❓ <span data-i18n="howto_title">How It Works</span></h2>
+    <p class="mb-12" style="color:var(--gray-600);" data-i18n="howto_intro">RateCut helps you in 3 simple steps:</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3 data-i18n="step1_title">Enter Your Budget</h3>
+          <p data-i18n="step1_desc">Tell us how much money you want to spend (e.g. ₹500, ₹1,000 or ₹2,000). Choose your household size so we can help you plan better.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3 data-i18n="step2_title">Add Products & Compare Prices</h3>
+          <p data-i18n="step2_desc">Add essential products like rice, dal, oil and vegetables to your list. Then compare prices from different shops to find the best deal.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h3 data-i18n="step3_title">Choose & Save</h3>
+          <p data-i18n="step3_desc">Pick the basket with the lowest cost. See your potential savings and save your shopping list to review later.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-16">
+      <button class="btn btn-primary" onclick="goTo('budget')">🛒 <span data-i18n="btn_start_now">Start Now</span></button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <p data-i18n="footer">RateCut — Every Rupee Counts · Demo Website · No real transactions · © 2026</p>
+</footer>
+
+<!-- ========================== JAVASCRIPT ========================== -->
+<script>
+// ===== LANGUAGE DATA =====
+const LANG = {
+  en: {
+    site_title: '🪙 RateCut — Every Rupee Counts',
+    site_subtitle: 'Plan your shopping, compare prices and save money.',
+    nav_home: 'Home',
+    nav_budget: 'Start Shopping',
+    nav_compare: 'Compare Prices',
+    nav_savings: 'My Savings',
+    nav_submit: 'Submit Price',
+    nav_howto: 'How It Works',
+    nav_lang: 'తెలుగు',
+    home_title: 'Welcome to RateCut',
+    home_desc: 'A simple tool to plan your shopping, compare prices across shops, and keep track of how much you save — all in Indian Rupees (₹).',
+    btn_change_lang: 'Change Language',
+    feat_budget_title: 'Plan Your Budget',
+    feat_budget_desc: 'Set a budget and build your shopping list with quantities and priorities.',
+    feat_compare_title: 'Compare Shop Prices',
+    feat_compare_desc: 'See sample prices from 3 shops and find the best deal for your basket.',
+    feat_savings_title: 'Track Your Savings',
+    feat_savings_desc: 'See how much you could save by choosing the cheapest basket.',
+    feat_howto_title: 'Easy to Use',
+    feat_howto_desc: 'Simple steps anyone can follow — no login needed.',
+    budget_title: 'Shopping Budget & List',
+    budget_label: 'Your Budget (₹)',
+    household_label: 'Household Size',
+    budget_quick: 'Quick budget options:',
+    add_products: '➕ Add Products to Your List',
+    add_products_hint: 'Tap a product to add it. Tap again to remove.',
+    your_list: '📝 Your Shopping List',
+    btn_reset: '🔄 Reset List',
+    empty_list: 'Your shopping list is empty. Add products above to get started.',
+    assistant_title: 'Smart Budget Assistant',
+    cheapest_basket: '🏆 Cheapest Valid Basket',
+    alternatives_title: '💡 Suitable Cheaper Alternatives',
+    btn_save: 'Save List',
+    compare_title: 'Compare Prices Across Shops',
+    demo_warning: 'These are sample prices for demonstration only. Actual market prices will vary.',
+    th_product: 'Product',
+    th_qty: 'Qty',
+    th_updated: 'Updated',
+    th_shop: 'Shop',
+    th_price: 'Price (₹)',
+    th_date: 'Date',
+    basket_compare: 'Your Basket Cost at Each Shop',
+    savings_title: 'My Savings Dashboard',
+    no_savings: 'No saved shopping list found. Go to "Start Shopping", build a list, and click "Save List" to see savings here.',
+    btn_clear_saved: 'Clear Saved List',
+    submit_title: 'Submit a Local Price',
+    submit_disclaimer: 'Submitted prices are <strong>unverified demo submissions</strong>. They are stored only in your browser for this session and are <strong>not shared</strong> with other users or permanently stored on any server.',
+    submit_shop: 'Shop Name *',
+    submit_product: 'Product Name *',
+    submit_qty: 'Quantity *',
+    submit_price: 'Price (₹) *',
+    submit_date: 'Date *',
+    btn_submit_price: 'Submit Price',
+    submitted_heading: '📋 Your Submitted Prices (Demo Only)',
+    submitted_warning: 'These submissions are stored locally in your browser only. They are not verified and not shared with anyone.',
+    howto_title: 'How It Works',
+    howto_intro: 'RateCut helps you in 3 simple steps:',
+    step1_title: 'Enter Your Budget',
+    step1_desc: 'Tell us how much money you want to spend (e.g. ₹500, ₹1,000 or ₹2,000). Choose your household size so we can help you plan better.',
+    step2_title: 'Add Products & Compare Prices',
+    step2_desc: 'Add essential products like rice, dal, oil and vegetables to your list. Then compare prices from different shops to find the best deal.',
+    step3_title: 'Choose & Save',
+    step3_desc: 'Pick the basket with the lowest cost. See your potential savings and save your shopping list to review later.',
+    btn_start_now: 'Start Now',
+    footer: 'RateCut — Every Rupee Counts · Demo Website · No real transactions · © 2026',
+    lbl_total_budget: 'Total Budget',
+    lbl_basket_cost: 'Basket Cost',
+    lbl_remaining: 'Remaining',
+    lbl_over_budget: 'Over Budget',
+    lbl_potential_savings: 'Potential Savings',
+    lbl_cheapest_cost: 'Cheapest Basket',
+    msg_within_budget: '✅ Great! Your basket is within budget.',
+    msg_over_budget: '⚠️ Your basket exceeds the budget by ₹{amount}. Consider removing flexible items or reducing quantities to stay within budget.',
+    msg_no_items: 'Add items to your list to see the budget analysis.',
+    essential: 'Essential',
+    flexible: 'Flexible',
+    toast_saved: 'Shopping list saved!',
+    toast_cleared: 'Saved list cleared.',
+    toast_reset: 'Shopping list reset.',
+    toast_price_submitted: 'Price submitted (demo only).',
+    toast_removed: 'Item removed.',
+    savings_original: 'Original Basket Cost',
+    savings_recommended: 'Cheapest Basket (Recommended)',
+    savings_saved: 'You Could Save',
+    savings_note: 'Based on the cheapest shop prices for your saved products.',
+    saved_list_heading: 'Your Saved Shopping List',
+    person: 'person',
+    people: 'people',
+    at_shop: 'at',
+    per_unit: 'per',
+  },
+  te: {
+    site_title: '🪙 రేట్‌కట్ — ప్రతి రూపాయి విలువైనదే',
+    site_subtitle: 'మీ షాపింగ్ ప్లాన్ చేయండి, ధరలు పోల్చండి, డబ్బు ఆదా చేయండి.',
+    nav_home: 'హోమ్',
+    nav_budget: 'షాపింగ్ ప్రారంభం',
+    nav_compare: 'ధరలు పోల్చండి',
+    nav_savings: 'నా పొదుపు',
+    nav_submit: 'ధర సమర్పించండి',
+    nav_howto: 'ఎలా పనిచేస్తుంది',
+    nav_lang: 'English',
+    home_title: 'రేట్‌కట్‌కు స్వాగతం',
+    home_desc: 'మీ షాపింగ్ ప్లాన్ చేయడానికి, దుకాణాల ధరలు పోల్చడానికి, మీరు ఎంత ఆదా చేస్తున్నారో తెలుసుకోవడానికి ఒక సాధారణ సాధనం — అంతా భారతీయ రూపాయలలో (₹).',
+    btn_change_lang: 'భాష మార్చండి',
+    feat_budget_title: 'మీ బడ్జెట్ ప్లాన్ చేయండి',
+    feat_budget_desc: 'బడ్జెట్ సెట్ చేసి, పరిమాణాలు మరియు ప్రాధాన్యతలతో మీ షాపింగ్ జాబితాను రూపొందించండి.',
+    feat_compare_title: 'దుకాణ ధరలు పోల్చండి',
+    feat_compare_desc: '3 దుకాణాల నమూనా ధరలు చూడండి మరియు మీ బుట్టకు ఉత్తమ డీల్ కనుగొనండి.',
+    feat_savings_title: 'మీ పొదుపు ట్రాక్ చేయండి',
+    feat_savings_desc: 'చౌకైన బుట్ట ఎంచుకోవడం ద్వారా మీరు ఎంత ఆదా చేయవచ్చో చూడండి.',
+    feat_howto_title: 'ఉపయోగించడం సులభం',
+    feat_howto_desc: 'ఎవరైనా అనుసరించగల సాధారణ దశలు — లాగిన్ అవసరం లేదు.',
+    budget_title: 'షాపింగ్ బడ్జెట్ & జాబితా',
+    budget_label: 'మీ బడ్జెట్ (₹)',
+    household_label: 'ఇంటి సభ్యులు',
+    budget_quick: 'త్వరిత బడ్జెట్ ఎంపికలు:',
+    add_products: '➕ మీ జాబితాకు ఉత్పత్తులు జోడించండి',
+    add_products_hint: 'జోడించడానికి ఉత్పత్తిపై నొక్కండి. తొలగించడానికి మళ్ళీ నొక్కండి.',
+    your_list: '📝 మీ షాపింగ్ జాబితా',
+    btn_reset: '🔄 జాబితా రీసెట్',
+    empty_list: 'మీ షాపింగ్ జాబితా ఖాళీగా ఉంది. ప్రారంభించడానికి పైన ఉత్పత్తులు జోడించండి.',
+    assistant_title: 'స్మార్ట్ బడ్జెట్ సహాయకుడు',
+    cheapest_basket: '🏆 అత్యంత చౌకైన బుట్ట',
+    alternatives_title: '💡 తగిన చౌక ప్రత్యామ్నాయాలు',
+    btn_save: 'జాబితా సేవ్ చేయండి',
+    compare_title: 'దుకాణాలలో ధరలు పోల్చండి',
+    demo_warning: 'ఇవి ప్రదర్శన కోసం మాత్రమే నమూనా ధరలు. వాస్తవ మార్కెట్ ధరలు మారవచ్చు.',
+    th_product: 'ఉత్పత్తి',
+    th_qty: 'పరిమాణం',
+    th_updated: 'నవీకరించబడింది',
+    th_shop: 'దుకాణం',
+    th_price: 'ధర (₹)',
+    th_date: 'తేదీ',
+    basket_compare: 'ప్రతి దుకాణంలో మీ బుట్ట ధర',
+    savings_title: 'నా పొదుపు డాష్‌బోర్డ్',
+    no_savings: 'సేవ్ చేసిన షాపింగ్ జాబితా కనుగొనబడలేదు. "షాపింగ్ ప్రారంభం"కు వెళ్ళి, జాబితా రూపొందించి, పొదుపు చూడటానికి "జాబితా సేవ్ చేయండి" నొక్కండి.',
+    btn_clear_saved: 'సేవ్ చేసిన జాబితా తొలగించండి',
+    submit_title: 'స్థానిక ధర సమర్పించండి',
+    submit_disclaimer: 'సమర్పించిన ధరలు <strong>ధృవీకరించని డెమో సమర్పణలు</strong>. అవి ఈ సెషన్‌లో మీ బ్రౌజర్‌లో మాత్రమే నిల్వ చేయబడతాయి మరియు ఇతర వినియోగదారులతో <strong>షేర్ చేయబడవు</strong> లేదా సర్వర్‌లో శాశ్వతంగా నిల్వ చేయబడవు.',
+    submit_shop: 'దుకాణం పేరు *',
+    submit_product: 'ఉత్పత్తి పేరు *',
+    submit_qty: 'పరిమాణం *',
+    submit_price: 'ధర (₹) *',
+    submit_date: 'తేదీ *',
+    btn_submit_price: 'ధర సమర్పించండి',
+    submitted_heading: '📋 మీ సమర్పించిన ధరలు (డెమో మాత్రమే)',
+    submitted_warning: 'ఈ సమర్పణలు మీ బ్రౌజర్‌లో మాత్రమే స్థానికంగా నిల్వ చేయబడతాయి. అవి ధృవీకరించబడలేదు మరియు ఎవరితోనూ షేర్ చేయబడవు.',
+    howto_title: 'ఇది ఎలా పనిచేస్తుంది',
+    howto_intro: 'రేట్‌కట్ మీకు 3 సాధారణ దశల్లో సహాయం చేస్తుంది:',
+    step1_title: 'మీ బడ్జెట్ నమోదు చేయండి',
+    step1_desc: 'మీరు ఎంత ఖర్చు చేయాలనుకుంటున్నారో చెప్పండి (ఉదా: ₹500, ₹1,000 లేదా ₹2,000). మీ ఇంటి సభ్యుల సంఖ్య ఎంచుకోండి.',
+    step2_title: 'ఉత్పత్తులు జోడించండి & ధరలు పోల్చండి',
+    step2_desc: 'బియ్యం, పప్పు, నూనె, కూరగాయలు వంటి అవసరమైన ఉత్పత్తులను జోడించండి. తర్వాత ఉత్తమ డీల్ కనుగొనడానికి వివిధ దుకాణాల ధరలు పోల్చండి.',
+    step3_title: 'ఎంచుకోండి & సేవ్ చేయండి',
+    step3_desc: 'అత్యల్ప ధర ఉన్న బుట్ట ఎంచుకోండి. మీ సంభావ్య పొదుపు చూడండి మరియు తర్వాత సమీక్షించడానికి మీ షాపింగ్ జాబితాను సేవ్ చేయండి.',
+    btn_start_now: 'ఇప్పుడు ప్రారంభించండి',
+    footer: 'రేట్‌కట్ — ప్రతి రూపాయి విలువైనదే · డెమో వెబ్‌సైట్ · నిజమైన లావాదేవీలు లేవు · © 2026',
+    lbl_total_budget: 'మొత్తం బడ్జెట్',
+    lbl_basket_cost: 'బుట్ట ధర',
+    lbl_remaining: 'మిగిలినది',
+    lbl_over_budget: 'బడ్జెట్ మించినది',
+    lbl_potential_savings: 'సంభావ్య పొదుపు',
+    lbl_cheapest_cost: 'అత్యంత చౌక బుట్ట',
+    msg_within_budget: '✅ చాలా బాగుంది! మీ బుట్ట బడ్జెట్‌లో ఉంది.',
+    msg_over_budget: '⚠️ మీ బుట్ట బడ్జెట్ కంటే ₹{amount} ఎక్కువ. బడ్జెట్‌లో ఉండటానికి ఫ్లెక్సిబుల్ వస్తువులను తొలగించడం లేదా పరిమాణాలను తగ్గించడం పరిగణించండి.',
+    msg_no_items: 'బడ్జెట్ విశ్లేషణ చూడటానికి మీ జాబితాకు వస్తువులను జోడించండి.',
+    essential: 'అవసరమైనది',
+    flexible: 'ఫ్లెక్సిబుల్',
+    toast_saved: 'షాపింగ్ జాబితా సేవ్ చేయబడింది!',
+    toast_cleared: 'సేవ్ చేసిన జాబితా తొలగించబడింది.',
+    toast_reset: 'షాపింగ్ జాబితా రీసెట్ చేయబడింది.',
+    toast_price_submitted: 'ధర సమర్పించబడింది (డెమో మాత్రమే).',
+    toast_removed: 'వస్తువు తొలగించబడింది.',
+    savings_original: 'అసలు బుట్ట ధర',
+    savings_recommended: 'అత్యంత చౌక బుట్ట (సిఫార్సు)',
+    savings_saved: 'మీరు ఆదా చేయవచ్చు',
+    savings_note: 'మీ సేవ్ చేసిన ఉత్పత్తుల కోసం అత్యల్ప దుకాణ ధరల ఆధారంగా.',
+    saved_list_heading: 'మీ సేవ్ చేసిన షాపింగ్ జాబితా',
+    person: 'వ్యక్తి',
+    people: 'మంది',
+    at_shop: 'దుకాణం',
+    per_unit: 'కు',
+  }
+};
+
+let currentLang = 'en';
+
+// ===== PRODUCTS CATALOG =====
+const PRODUCTS = [
+  { id: 'rice',    name: 'Rice',        nameTE: 'బియ్యం',     unit: '1 kg',  icon: '🍚', defaultEssential: true },
+  { id: 'dal',     name: 'Dal',         nameTE: 'పప్పు',      unit: '1 kg',  icon: '🫘', defaultEssential: true },
+  { id: 'wheat',   name: 'Wheat Flour', nameTE: 'గోధుమ పిండి', unit: '1 kg',  icon: '🌾', defaultEssential: true },
+  { id: 'oil',     name: 'Cooking Oil', nameTE: 'వంట నూనె',   unit: '1 L',   icon: '🫗', defaultEssential: true },
+  { id: 'vegs',    name: 'Vegetables',  nameTE: 'కూరగాయలు',   unit: '1 kg',  icon: '🥬', defaultEssential: true },
+  { id: 'milk',    name: 'Milk',        nameTE: 'పాలు',       unit: '1 L',   icon: '🥛', defaultEssential: true },
+  { id: 'salt',    name: 'Salt',        nameTE: 'ఉప్పు',      unit: '1 kg',  icon: '🧂', defaultEssential: false },
+  { id: 'sugar',   name: 'Sugar',       nameTE: 'చక్కెర',     unit: '1 kg',  icon: '🍬', defaultEssential: false },
+  { id: 'soap',    name: 'Soap',        nameTE: 'సబ్బు',      unit: '1 bar', icon: '🧼', defaultEssential: false },
+];
+
+// ===== DEMO SHOP PRICES =====
+const SHOPS = ['Annapurna Store', 'Sai Kirana', 'Lakshmi Mart'];
+const DEMO_PRICES = {
+  rice:  [48, 52, 45],
+  dal:   [120, 110, 115],
+  wheat: [38, 42, 40],
+  oil:   [145, 140, 150],
+  vegs:  [35, 30, 40],
+  milk:  [56, 58, 54],
+  salt:  [22, 20, 25],
+  sugar: [45, 48, 42],
+  soap:  [35, 30, 38],
+};
+const DEMO_DATE = '2026-10-15';
+
+// ===== STATE =====
+let shoppingList = []; // [{id, qty, essential}]
+let submittedPrices = []; // [{shop, product, qty, price, date}]
+
+// ===== NAVIGATION =====
+function goTo(section) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + section).classList.add('active');
+  document.querySelectorAll('.nav-btn[data-section]').forEach(b => b.classList.remove('active'));
+  const navBtn = document.querySelector(`.nav-btn[data-section="${section}"]`);
+  if (navBtn) navBtn.classList.add('active');
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (section === 'budget') updateAssistant();
+  if (section === 'compare') renderCompare();
+  if (section === 'savings') renderSavings();
+}
+
+document.querySelectorAll('.nav-btn[data-section]').forEach(btn => {
+  btn.addEventListener('click', () => goTo(btn.dataset.section));
+});
+
+// ===== LANGUAGE =====
+function toggleLanguage() {
+  currentLang = currentLang === 'en' ? 'te' : 'en';
+  applyLanguage();
+  // Re-render dynamic content
+  renderProductGrid();
+  renderShoppingList();
+  updateAssistant();
+  renderCompare();
+  renderSavings();
+  renderSubmitted();
+}
+
+function t(key) {
+  return LANG[currentLang][key] || LANG.en[key] || key;
+}
+
+function applyLanguage() {
+  document.getElementById('site-title').textContent = t('site_title');
+  document.getElementById('site-subtitle').textContent = t('site_subtitle');
+  document.documentElement.lang = currentLang === 'te' ? 'te' : 'en';
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const val = t(key);
+    if (val.includes('<strong>') || val.includes('<em>')) {
+      el.innerHTML = val;
+    } else {
+      el.textContent = val;
+    }
+  });
+}
+
+// ===== PRODUCT GRID =====
+function renderProductGrid() {
+  const grid = document.getElementById('productGrid');
+  grid.innerHTML = '';
+  PRODUCTS.forEach(p => {
+    const inList = shoppingList.some(i => i.id === p.id);
+    const chip = document.createElement('button');
+    chip.className = 'product-chip' + (inList ? ' added' : '');
+    chip.textContent = p.icon + ' ' + (currentLang === 'te' ? p.nameTE : p.name);
+    chip.setAttribute('aria-pressed', inList);
+    chip.addEventListener('click', () => {
+      if (inList) {
+        removeItem(p.id);
+      } else {
+        addItem(p.id);
+      }
+    });
+    grid.appendChild(chip);
+  });
+}
+
+function addItem(id) {
+  if (shoppingList.some(i => i.id === id)) return;
+  const prod = PRODUCTS.find(p => p.id === id);
+  shoppingList.push({ id, qty: 1, essential: prod.defaultEssential });
+  renderProductGrid();
+  renderShoppingList();
+  updateAssistant();
+}
+
+function removeItem(id) {
+  shoppingList = shoppingList.filter(i => i.id !== id);
+  renderProductGrid();
+  renderShoppingList();
+  updateAssistant();
+  showToast(t('toast_removed'));
+}
+
+function changeQty(id, delta) {
+  const item = shoppingList.find(i => i.id === id);
+  if (!item) return;
+  item.qty = Math.max(1, Math.min(20, item.qty + delta));
+  renderShoppingList();
+  updateAssistant();
+}
+
+function toggleEssential(id) {
+  const item = shoppingList.find(i => i.id === id);
+  if (!item) return;
+  item.essential = !item.essential;
+  renderShoppingList();
+  updateAssistant();
+}
+
+function resetList() {
+  shoppingList = [];
+  renderProductGrid();
+  renderShoppingList();
+  updateAssistant();
+  showToast(t('toast_reset'));
+}
+
+// ===== SHOPPING LIST RENDER =====
+function renderShoppingList() {
+  const container = document.getElementById('shoppingList');
+  const emptyMsg = document.getElementById('emptyListMsg');
+
+  if (shoppingList.length === 0) {
+    container.innerHTML = '';
+    emptyMsg.style.display = 'flex';
+    return;
+  }
+  emptyMsg.style.display = 'none';
+
+  container.innerHTML = shoppingList.map(item => {
+    const prod = PRODUCTS.find(p => p.id === item.id);
+    const name = currentLang === 'te' ? prod.nameTE : prod.name;
+    // Average price across shops for display
+    const prices = DEMO_PRICES[item.id];
+    const avgPrice = prices ? Math.round(prices.reduce((a,b) => a+b, 0) / prices.length) : 0;
+    const totalPrice = avgPrice * item.qty;
+
+    return `
+      <div class="shop-item ${item.essential ? '' : 'flexible'}">
+        <span class="item-name">${prod.icon} ${name} <small style="color:var(--gray-600);">(${prod.unit})</small></span>
+        <div class="item-controls">
+          <button class="qty-btn" onclick="changeQty('${item.id}', -1)" aria-label="Decrease quantity">−</button>
+          <span class="qty-display">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${item.id}', 1)" aria-label="Increase quantity">+</button>
+          <span style="min-width:70px;text-align:right;font-weight:600;color:var(--green-dark);">₹${totalPrice}</span>
+          <button class="badge-essential ${item.essential ? 'essential' : 'flexible'}" onclick="toggleEssential('${item.id}')">
+            ${item.essential ? t('essential') : t('flexible')}
+          </button>
+          <button class="remove-btn" onclick="removeItem('${item.id}')" aria-label="Remove ${name}" title="Remove">✕</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ===== SMART BUDGET ASSISTANT =====
+function getBasketCostAtShop(shopIdx) {
+  let total = 0;
+  shoppingList.forEach(item => {
+    const prices = DEMO_PRICES[item.id];
+    if (prices) total += prices[shopIdx] * item.qty;
+  });
+  return total;
+}
+
+function getCheapestPerItem(id) {
+  const prices = DEMO_PRICES[id];
+  if (!prices) return { price: 0, shopIdx: 0 };
+  let minP = Infinity, minIdx = 0;
+  prices.forEach((p, i) => { if (p < minP) { minP = p; minIdx = i; } });
+  return { price: minP, shopIdx: minIdx };
+}
+
+function updateAssistant() {
+  const card = document.getElementById('assistantCard');
+  if (shoppingList.length === 0) {
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = 'block';
+
+  const budget = parseInt(document.getElementById('budgetInput').value) || 0;
+
+  // Cost at each shop
+  const shopCosts = SHOPS.map((_, i) => getBasketCostAtShop(i));
+  const cheapestShopIdx = shopCosts.indexOf(Math.min(...shopCosts));
+  const cheapestShopCost = shopCosts[cheapestShopIdx];
+
+  // Cheapest picking best price per item
+  let cheapestBasketCost = 0;
+  shoppingList.forEach(item => {
+    const best = getCheapestPerItem(item.id);
+    cheapestBasketCost += best.price * item.qty;
+  });
+
+  // Most expensive basket (for savings calc)
+  const mostExpensiveShopCost = Math.max(...shopCosts);
+
+  // Use cheapest single-shop basket cost as the "basket cost"
+  const basketCost = cheapestShopCost;
+  const remaining = budget - basketCost;
+  const overBudget = remaining < 0 ? Math.abs(remaining) : 0;
+  const potentialSavings = mostExpensiveShopCost - cheapestBasketCost;
+
+  // Summary cards
+  const grid = document.getElementById('summaryGrid');
+  grid.innerHTML = `
+    <div class="summary-card">
+      <div class="label">${t('lbl_total_budget')}</div>
+      <div class="value">₹${budget.toLocaleString('en-IN')}</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">${t('lbl_basket_cost')}</div>
+      <div class="value">₹${basketCost.toLocaleString('en-IN')}</div>
+    </div>
+    <div class="summary-card ${remaining < 0 ? 'danger' : ''}">
+      <div class="label">${remaining >= 0 ? t('lbl_remaining') : t('lbl_over_budget')}</div>
+      <div class="value">${remaining >= 0 ? '₹' + remaining.toLocaleString('en-IN') : '₹' + overBudget.toLocaleString('en-IN')}</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">${t('lbl_cheapest_cost')}</div>
+      <div class="value">₹${cheapestBasketCost.toLocaleString('en-IN')}</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">${t('lbl_potential_savings')}</div>
+      <div class="value">₹${potentialSavings.toLocaleString('en-IN')}</div>
+    </div>
+  `;
+
+  // Advice
+  const adviceDiv = document.getElementById('assistantAdvice');
+  if (remaining >= 0) {
+    adviceDiv.innerHTML = `<div class="alert alert-success"><span>✅</span><span>${t('msg_within_budget')}</span></div>`;
+  } else {
+    const msg = t('msg_over_budget').replace('{amount}', overBudget.toLocaleString('en-IN'));
+    adviceDiv.innerHTML = `<div class="alert alert-danger"><span>⚠️</span><span>${msg}</span></div>`;
+
+    // Suggest removing flexible items
+    const flexItems = shoppingList.filter(i => !i.essential);
+    if (flexItems.length > 0) {
+      let suggestions = '<ul style="margin-top:8px;">';
+      flexItems.forEach(fi => {
+        const prod = PRODUCTS.find(p => p.id === fi.id);
+        const name = currentLang === 'te' ? prod.nameTE : prod.name;
+        const best = getCheapestPerItem(fi.id);
+        const savedAmount = best.price * fi.qty;
+        suggestions += `<li>Remove <strong>${name}</strong> (saves ₹${savedAmount.toLocaleString('en-IN')})</li>`;
+      });
+      suggestions += '</ul>';
+      adviceDiv.innerHTML += `<div class="alert alert-warning"><span>💡</span><div>${suggestions}</div></div>`;
+    }
+  }
+
+  // Cheapest basket details
+  const cheapestSection = document.getElementById('cheapestBasketSection');
+  const cheapestInfo = document.getElementById('cheapestBasketInfo');
+  cheapestSection.style.display = 'block';
+  let cbHtml = '<div class="alert alert-info"><span>ℹ️</span><span>DEMO DATA — Best prices picked from sample data per product.</span></div>';
+  cbHtml += '<div style="overflow-x:auto;"><table><thead><tr><th>' + t('th_product') + '</th><th>' + t('th_qty') + '</th><th>' + t('th_price') + '</th><th>' + t('th_shop') + '</th></tr></thead><tbody>';
+  shoppingList.forEach(item => {
+    const prod = PRODUCTS.find(p => p.id === item.id);
+    const name = currentLang === 'te' ? prod.nameTE : prod.name;
+    const best = getCheapestPerItem(item.id);
+    cbHtml += `<tr>
+      <td>${prod.icon} ${name}</td>
+      <td>${item.qty} × ${prod.unit}</td>
+      <td class="price-cell">₹${(best.price * item.qty).toLocaleString('en-IN')}</td>
+      <td>${SHOPS[best.shopIdx]}</td>
+    </tr>`;
+  });
+  cbHtml += `</tbody><tfoot><tr><th colspan="2"><strong>Total</strong></th><th class="price-cell">₹${cheapestBasketCost.toLocaleString('en-IN')}</th><th></th></tr></tfoot></table></div>`;
+  cheapestInfo.innerHTML = cbHtml;
+
+  // Alternatives — show cheaper shops per item
+  const altSection = document.getElementById('alternativesSection');
+  const altList = document.getElementById('alternativesList');
+  let altHtml = '';
+  shoppingList.forEach(item => {
+    const prod = PRODUCTS.find(p => p.id === item.id);
+    const name = currentLang === 'te' ? prod.nameTE : prod.name;
+    const prices = DEMO_PRICES[item.id];
+    if (!prices) return;
+    const maxP = Math.max(...prices);
+    const minP = Math.min(...prices);
+    if (maxP === minP) return; // all same price
+    const minIdx = prices.indexOf(minP);
+    const maxIdx = prices.indexOf(maxP);
+    const savePer = maxP - minP;
+    altHtml += `<div class="alert alert-success" style="margin-bottom:8px;">
+      <span>💡</span>
+      <span><strong>${prod.icon} ${name}</strong>: ₹${minP} ${t('at_shop')} ${SHOPS[minIdx]} vs ₹${maxP} ${t('at_shop')} ${SHOPS[maxIdx]} — save ₹${savePer} ${t('per_unit')} ${prod.unit}</span>
+    </div>`;
+  });
+  if (altHtml) {
+    altSection.style.display = 'block';
+    altList.innerHTML = altHtml;
+  } else {
+    altSection.style.display = 'none';
+  }
+
+  // Also update compare section basket card
+  renderBasketCompare(shopCosts, cheapestShopIdx);
+}
+
+// ===== COMPARE PRICES TABLE =====
+function renderCompare() {
+  const body = document.getElementById('compareBody');
+  const foot = document.getElementById('compareFoot');
+  const verdict = document.getElementById('compareVerdict');
+
+  const totals = [0, 0, 0];
+
+  body.innerHTML = PRODUCTS.map(prod => {
+    const prices = DEMO_PRICES[prod.id];
+    const minP = Math.min(...prices);
+    const name = currentLang === 'te' ? prod.nameTE : prod.name;
+
+    prices.forEach((p, i) => { totals[i] += p; });
+
+    return `<tr>
+      <td>${prod.icon} ${name}</td>
+      <td>${prod.unit}</td>
+      ${prices.map(p => `<td class="price-cell ${p === minP ? 'cheapest' : ''}">₹${p}</td>`).join('')}
+      <td>${DEMO_DATE}</td>
+    </tr>`;
+  }).join('');
+
+  const minTotal = Math.min(...totals);
+  foot.innerHTML = `<tr style="font-weight:800;">
+    <td colspan="2"><strong>Total (1 of each)</strong></td>
+    ${totals.map(t => `<td class="shop-total ${t === minTotal ? 'shop-cheapest cheapest' : 'shop-expensive'}">₹${t}</td>`).join('')}
+    <td></td>
+  </tr>`;
+
+  const cheapestIdx = totals.indexOf(minTotal);
+  verdict.innerHTML = `<div class="alert alert-info">
+    <span>ℹ️</span>
+    <span>Based on the <strong>demo data</strong> above (1 unit of each product), <strong>${SHOPS[cheapestIdx]}</strong> has the lowest total at <strong>₹${minTotal}</strong>. Actual prices will vary.</span>
+  </div>`;
+}
+
+function renderBasketCompare(shopCosts, cheapestIdx) {
+  const card = document.getElementById('basketCompareCard');
+  if (shoppingList.length === 0) {
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = 'block';
+
+  const grid = document.getElementById('basketCompareGrid');
+  const minCost = Math.min(...shopCosts);
+
+  grid.innerHTML = SHOPS.map((name, i) => `
+    <div class="summary-card ${shopCosts[i] === minCost ? '' : ''}">
+      <div class="label">🏪 ${name}</div>
+      <div class="value" style="color:${shopCosts[i] === minCost ? 'var(--green-dark)' : 'var(--gray-800)'}">₹${shopCosts[i].toLocaleString('en-IN')}</div>
+      ${shopCosts[i] === minCost ? '<div style="color:var(--green);font-size:0.8rem;font-weight:700;margin-top:4px;">✅ Cheapest</div>' : ''}
+    </div>
+  `).join('');
+
+  const verdictDiv = document.getElementById('basketCompareVerdict');
+  const savings = Math.max(...shopCosts) - minCost;
+  verdictDiv.innerHTML = `<div class="alert alert-success mt-16">
+    <span>💰</span>
+    <span>Based on the <strong>demo data</strong>, buying your basket from <strong>${SHOPS[cheapestIdx]}</strong> costs <strong>₹${minCost.toLocaleString('en-IN')}</strong>. You could save up to <strong>₹${savings.toLocaleString('en-IN')}</strong> compared to the most expensive option.</span>
+  </div>`;
+}
+
+// ===== SAVINGS DASHBOARD =====
+function saveShoppingList() {
+  if (shoppingList.length === 0) {
+    showToast('Add items to your list first.', true);
+    return;
+  }
+  const budget = parseInt(document.getElementById('budgetInput').value) || 0;
+  const household = document.getElementById('householdSize').value;
+  const data = {
+    list: shoppingList.slice(),
+    budget,
+    household,
+    savedAt: new Date().toISOString()
+  };
+  localStorage.setItem('ratecut_list', JSON.stringify(data));
+  showToast(t('toast_saved'));
+}
+
+function clearSavedList() {
+  localStorage.removeItem('ratecut_list');
+  renderSavings();
+  showToast(t('toast_cleared'));
+}
+
+function renderSavings() {
+  const container = document.getElementById('savingsContent');
+  const noSavings = document.getElementById('noSavings');
+  const raw = localStorage.getItem('ratecut_list');
+
+  if (!raw) {
+    container.innerHTML = '';
+    noSavings.style.display = 'flex';
+    return;
+  }
+  noSavings.style.display = 'none';
+
+  const data = JSON.parse(raw);
+  const list = data.list;
+
+  // Calculate costs
+  const shopCosts = SHOPS.map((_, si) => {
+    let total = 0;
+    list.forEach(item => {
+      const prices = DEMO_PRICES[item.id];
+      if (prices) total += prices[si] * item.qty;
+    });
+    return total;
+  });
+
+  const mostExpensive = Math.max(...shopCosts);
+  const cheapest = Math.min(...shopCosts);
+
+  // Cheapest cherry-picking per item
+  let cherryPicked = 0;
+  list.forEach(item => {
+    const best = getCheapestPerItem(item.id);
+    cherryPicked += best.price * item.qty;
+  });
+
+  const savingsAmount = mostExpensive - cherryPicked;
+
+  let html = '';
+  html += `<div class="savings-box">
+    <div class="sub">${t('savings_saved')}</div>
+    <div class="amount">₹${savingsAmount.toLocaleString('en-IN')}</div>
+    <div class="sub">${t('savings_note')}</div>
+  </div>`;
+
+  html += `<div class="summary-grid">
+    <div class="summary-card">
+      <div class="label">${t('savings_original')}</div>
+      <div class="value" style="color:var(--red);">₹${mostExpensive.toLocaleString('en-IN')}</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">${t('savings_recommended')}</div>
+      <div class="value">₹${cherryPicked.toLocaleString('en-IN')}</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">${t('lbl_total_budget')}</div>
+      <div class="value">₹${(data.budget || 0).toLocaleString('en-IN')}</div>
+    </div>
+  </div>`;
+
+  // Show saved list
+  html += `<h3 class="mt-16 mb-12">${t('saved_list_heading')}</h3>`;
+  html += '<div class="alert alert-info"><span>ℹ️</span><span>DEMO DATA — Prices are samples for demonstration only.</span></div>';
+  html += '<div class="table-wrap"><table><thead><tr>';
+  html += `<th>${t('th_product')}</th><th>${t('th_qty')}</th><th>${t('essential')}</th><th>Best Price</th><th>${t('th_shop')}</th>`;
+  html += '</tr></thead><tbody>';
+  list.forEach(item => {
+    const prod = PRODUCTS.find(p => p.id === item.id);
+    const name = currentLang === 'te' ? prod.nameTE : prod.name;
+    const best = getCheapestPerItem(item.id);
+    html += `<tr>
+      <td>${prod.icon} ${name}</td>
+      <td>${item.qty} × ${prod.unit}</td>
+      <td>${item.essential ? '✅ ' + t('essential') : t('flexible')}</td>
+      <td class="price-cell">₹${(best.price * item.qty).toLocaleString('en-IN')}</td>
+      <td>${SHOPS[best.shopIdx]}</td>
+    </tr>`;
+  });
+  html += `</tbody><tfoot><tr><th colspan="3">Total</th><th class="price-cell">₹${cherryPicked.toLocaleString('en-IN')}</th><th></th></tr></tfoot></table></div>`;
+
+  html += `<p class="mt-16" style="color:var(--gray-600);font-size:0.85rem;">Saved on: ${new Date(data.savedAt).toLocaleString()}</p>`;
+
+  container.innerHTML = html;
+}
+
+// ===== SUBMIT A PRICE =====
+function submitPrice(e) {
+  e.preventDefault();
+  const shop = document.getElementById('pShop').value.trim();
+  const product = document.getElementById('pProduct').value.trim();
+  const qty = document.getElementById('pQty').value.trim();
+  const price = parseFloat(document.getElementById('pPrice').value);
+  const date = document.getElementById('pDate').value;
+
+  if (!shop || !product || !qty || !price || !date) {
+    showToast('Please fill in all required fields.', true);
+    return;
+  }
+  if (price <= 0 || price > 100000) {
+    showToast('Please enter a valid price (₹1 - ₹1,00,000).', true);
+    return;
+  }
+
+  submittedPrices.push({ shop, product, qty, price, date });
+  document.getElementById('priceForm').reset();
+  // Set date to today
+  document.getElementById('pDate').valueAsDate = new Date();
+  renderSubmitted();
+  showToast(t('toast_price_submitted'));
+}
+
+function renderSubmitted() {
+  const container = document.getElementById('submittedPrices');
+  const body = document.getElementById('submittedBody');
+  if (submittedPrices.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+  container.style.display = 'block';
+  body.innerHTML = submittedPrices.map(p => `
+    <tr>
+      <td>${escapeHtml(p.shop)}</td>
+      <td>${escapeHtml(p.product)}</td>
+      <td>${escapeHtml(p.qty)}</td>
+      <td class="price-cell">₹${p.price}</td>
+      <td>${p.date}</td>
+    </tr>
+  `).join('');
+}
+
+// ===== TOAST =====
+function showToast(msg, isError = false) {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'toast' + (isError ? ' error' : '');
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(100%)';
+    toast.style.transition = '0.3s ease';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+// ===== UTILITY =====
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// ===== INIT =====
+function init() {
+  // Set today's date on submit form
+  const dateInput = document.getElementById('pDate');
+  dateInput.valueAsDate = new Date();
+
+  applyLanguage();
+  renderProductGrid();
+  renderShoppingList();
+  renderCompare();
+  renderSavings();
+
+  // Listen for budget changes
+  document.getElementById('budgetInput').addEventListener('input', updateAssistant);
+  document.getElementById('householdSize').addEventListener('change', updateAssistant);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
